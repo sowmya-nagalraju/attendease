@@ -71,6 +71,7 @@ const pageTitles = {
     subjects: "Subjects",
     sessions: "Class Sessions",
     attendance: "Attendance",
+    "my-attendance": "My Attendance",
     reports: "Attendance Reports"
 
 };
@@ -159,6 +160,9 @@ function handleHashNavigation() {
 
         case "attendance":
             loadAttendance();
+            break;
+
+        case "my-attendance":
             break;
 
         case "reports":
@@ -1168,7 +1172,243 @@ async function generateSubjectReport(event) {
     }
 
 }
+// ============================================================
+// MY ATTENDANCE
+// ============================================================
 
+async function loadMyAttendance(event) {
+
+    event.preventDefault();
+
+    // Get the roll number entered by the student
+    const rollNumber =
+        document.getElementById(
+            "myAttendanceRollNumber"
+        ).value.trim();
+
+    // Get the subject code entered by the student
+    const subjectCode =
+        document.getElementById(
+            "myAttendanceSubjectCode"
+        ).value.trim();
+
+
+    // Check whether both fields were entered
+    if (!rollNumber || !subjectCode) {
+
+        alert(
+            "Roll number and subject code are required."
+        );
+
+        return;
+    }
+
+
+    // Get the attendance table
+    const table =
+        document.getElementById(
+            "myAttendanceTable"
+        );
+
+
+    try {
+
+        // ====================================================
+        // 1. FIND STUDENT USING ROLL NUMBER
+        // ====================================================
+
+        const student =
+            await fetchJson(
+                "/api/students/roll/" +
+                encodeURIComponent(rollNumber)
+            );
+
+
+        // ====================================================
+        // 2. FIND SUBJECT USING SUBJECT CODE
+        // ====================================================
+
+        const subject =
+            await fetchJson(
+                "/api/subjects/code/" +
+                encodeURIComponent(subjectCode)
+            );
+
+
+        // ====================================================
+        // 3. GET ALL ATTENDANCE RECORDS FOR THIS STUDENT
+        // ====================================================
+
+        const attendanceRecords =
+            await fetchJson(
+                "/api/attendance/student/" +
+                student.id
+            );
+
+
+        // ====================================================
+        // 4. CALCULATE ATTENDANCE PERCENTAGE
+        // ====================================================
+
+        const percentage =
+            await fetchJson(
+                `/api/reports/attendance?studentId=${student.id}&subjectId=${subject.id}`
+            );
+
+
+        // ====================================================
+        // 5. CHECK WHETHER STUDENT HAS SHORTAGE
+        // ====================================================
+
+        const shortage =
+            await fetchJson(
+                `/api/reports/shortage/check?studentId=${student.id}&subjectId=${subject.id}`
+            );
+
+
+        // ====================================================
+        // 6. DISPLAY ATTENDANCE PERCENTAGE
+        // ====================================================
+
+        document.getElementById(
+            "myAttendancePercentage"
+        ).textContent =
+            formatNumber(percentage) + "%";
+
+
+        // ====================================================
+        // 7. DISPLAY ATTENDANCE STATUS
+        // ====================================================
+
+        document.getElementById(
+            "myAttendanceStatus"
+        ).textContent =
+            shortage
+                ? "SHORTAGE"
+                : "ELIGIBLE";
+
+
+        // ====================================================
+        // 8. SHOW ONLY THE SELECTED SUBJECT'S RECORDS
+        // ====================================================
+
+        const subjectRecords =
+            attendanceRecords.filter(record => {
+
+                return record.session &&
+                    record.session.subject &&
+                    record.session.subject.subjectCode ===
+                    subjectCode;
+
+            });
+
+
+        // ====================================================
+        // 9. IF THERE ARE NO RECORDS
+        // ====================================================
+
+        if (subjectRecords.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        No attendance records found for
+                        ${escapeHtml(subjectCode)}.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        // ====================================================
+        // 10. CLEAR OLD TABLE DATA
+        // ====================================================
+
+        table.innerHTML = "";
+
+
+        // ====================================================
+        // 11. DISPLAY ATTENDANCE RECORDS
+        // ====================================================
+
+        subjectRecords.forEach(record => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+                <td>
+                    ${escapeHtml(record.session.id)}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                record.session.sessionDate
+            )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                record.session.subject.subjectCode
+            )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                record.session.topic
+            )}
+                </td>
+
+                <td>
+                    ${
+                record.present
+                    ? "Present"
+                    : "Absent"
+            }
+                </td>
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+
+    } catch (error) {
+
+        // ====================================================
+        // ERROR HANDLING
+        // ====================================================
+
+        console.error(
+            "My attendance error:",
+            error
+        );
+
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-state">
+                    ${escapeHtml(error.message)}
+                </td>
+            </tr>
+        `;
+
+
+        document.getElementById(
+            "myAttendancePercentage"
+        ).textContent = "-";
+
+
+        document.getElementById(
+            "myAttendanceStatus"
+        ).textContent = "-";
+    }
+
+}
 
 // ============================================================
 // FORM EVENT HANDLERS
@@ -1188,6 +1428,18 @@ document.addEventListener(
             studentForm.addEventListener(
                 "submit",
                 addStudent
+            );
+        }
+        const myAttendanceForm =
+            document.getElementById(
+                "myAttendanceForm"
+            );
+
+        if (myAttendanceForm) {
+
+            myAttendanceForm.addEventListener(
+                "submit",
+                loadMyAttendance
             );
         }
 

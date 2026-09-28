@@ -50,6 +50,10 @@
                 <span>✓</span>
                 Attendance
             </a>
+            <a href="#my-attendance" class="nav-link">
+                <span>◉</span>
+                My Attendance
+            </a>
 
             <a href="#reports" class="nav-link">
                 <span>▥</span>
@@ -734,6 +738,144 @@
                         <tr>
                             <td colspan="6" class="empty-state">
                                 Click "Refresh Attendance"
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+        <!-- ================= MY ATTENDANCE ================= -->
+
+        <section id="my-attendance" class="page-section hidden">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>My Attendance</h2>
+                    <p>View your attendance records and attendance percentage.</p>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h3>Student Attendance</h3>
+
+                <form id="myAttendanceForm" class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="myAttendanceRollNumber">
+                            Roll Number
+                        </label>
+
+                        <input
+                                type="text"
+                                id="myAttendanceRollNumber"
+                                placeholder="Enter your roll number"
+                                required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="myAttendanceSubjectCode">
+                            Subject Code
+                        </label>
+
+                        <input
+                                type="text"
+                                id="myAttendanceSubjectCode"
+                                placeholder="Example: CS301"
+                                required>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="action-btn">
+                            View My Attendance
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="report-grid">
+
+                <div class="panel report-card">
+
+                    <h3>Attendance Percentage</h3>
+
+                    <div
+                            class="big-result"
+                            id="myAttendancePercentage">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="panel report-card">
+
+                    <h3>Attendance Status</h3>
+
+                    <div
+                            class="big-result"
+                            id="myAttendanceStatus">
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>My Attendance Records</h3>
+                        <p>Your recorded sessions for the selected subject.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>Session ID</th>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Topic</th>
+                            <th>Status</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="myAttendanceTable">
+
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                Enter your details to view attendance.
                             </td>
                         </tr>
 

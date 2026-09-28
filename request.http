@@ -203,3 +203,38 @@ DELETE http://localhost:8080/api/subjects/5
 
 ### TEST - Verify deleted subject
 GET http://localhost:8080/api/subjects/5
+###
+
+### TEST - Create temporary session
+POST http://localhost:8080/api/sessions?subjectCode=CS301&sessionDate=2026-09-29&topic=Temporary%20Delete%20Test
+###
+
+### TEST - Delete temporary session
+DELETE http://localhost:8080/api/sessions/4
+###
+
+### TEST - Create temporary session for attendance delete test
+POST http://localhost:8080/api/sessions?subjectCode=CS301&sessionDate=2026-09-30&topic=Temporary%20Attendance%20Delete%20Test
+
+###
+###
+
+### TEST - Create temporary attendance
+POST http://localhost:8080/api/attendance
+Content-Type: application/json
+
+{
+  "rollNumber": "25AD208",
+  "sessionId": 5,
+  "present": true
+}
+
+###
+###
+
+### TEST - Delete temporary attendance
+DELETE http://localhost:8080/api/attendance/3
+###
+
+### TEST - Verify deleted attendance
+GET http://localhost:8080/api/attendance/3
