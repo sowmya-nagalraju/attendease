@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AttendEase - Classroom Attendance System</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">✓</div>
+            <div>
+                <h1>AttendEase</h1>
+                <span>Classroom Attendance</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="#dashboard" class="nav-link active">
+                <span>⌂</span>
+                Dashboard
+            </a>
+
+            <a href="#students" class="nav-link">
+                <span>♙</span>
+                Students
+            </a>
+
+            <a href="#subjects" class="nav-link">
+                <span>▣</span>
+                Subjects
+            </a>
+
+            <a href="#sessions" class="nav-link">
+                <span>◷</span>
+                Sessions
+            </a>
+
+            <a href="#attendance" class="nav-link">
+                <span>✓</span>
+                Attendance
+            </a>
+
+            <a href="#reports" class="nav-link">
+                <span>▥</span>
+                Reports
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            Classroom Attendance Management System
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <h2 id="pageTitle">Dashboard</h2>
+                <p>Digital classroom attendance management</p>
+            </div>
+
+            <button class="refresh-btn" onclick="loadDashboard()">
+                Refresh
+            </button>
+
+        </header>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="page-section">
+
+            <div class="welcome-box">
+
+                <div>
+                    <h2>Welcome to AttendEase</h2>
+
+                    <p>
+                        Manage students, subjects, class sessions,
+                        attendance and attendance reports from one place.
+                    </p>
+                </div>
+
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    System Online
+                </div>
+
+            </div>
+
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+                    <div class="card-label">Students</div>
+                    <div class="card-value" id="studentCount">0</div>
+                    <div class="card-note">Registered students</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-label">Subjects</div>
+                    <div class="card-value" id="subjectCount">0</div>
+                    <div class="card-note">Available subjects</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-label">Sessions</div>
+                    <div class="card-value" id="sessionCount">0</div>
+                    <div class="card-note">Recorded class sessions</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-label">Attendance Records</div>
+                    <div class="card-value" id="attendanceCount">0</div>
+                    <div class="card-note">Total attendance records</div>
+                </div>
+
+            </div>
+
+
+            <div class="two-column">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>How AttendEase Works</h3>
+                            <p>Basic attendance workflow</p>
+                        </div>
+                    </div>
+
+                    <div class="workflow">
+
+                        <div class="workflow-item">
+                            <span>1</span>
+                            <div>
+                                <strong>Add Students</strong>
+                                <small>Register students with roll numbers.</small>
+                            </div>
+                        </div>
+
+                        <div class="workflow-item">
+                            <span>2</span>
+                            <div>
+                                <strong>Add Subjects</strong>
+                                <small>Set the minimum attendance percentage.</small>
+                            </div>
+                        </div>
+
+                        <div class="workflow-item">
+                            <span>3</span>
+                            <div>
+                                <strong>Create Sessions</strong>
+                                <small>Record each class session.</small>
+                            </div>
+                        </div>
+
+                        <div class="workflow-item">
+                            <span>4</span>
+                            <div>
+                                <strong>Mark Attendance</strong>
+                                <small>Mark each student present or absent.</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Attendance Rules</h3>
+                            <p>Important project requirements</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-list">
+
+                        <div class="rule-item">
+                            <strong>One marking per session</strong>
+                            <span>The same student's attendance cannot be marked twice.</span>
+                        </div>
+
+                        <div class="rule-item">
+                            <strong>Configurable threshold</strong>
+                            <span>Each subject can have its own minimum attendance percentage.</span>
+                        </div>
+
+                        <div class="rule-item">
+                            <strong>Past-date correction</strong>
+                            <span>Faculty can correct an existing attendance record.</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= STUDENTS ================= -->
+
+        <section id="students" class="page-section hidden">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Students</h2>
+                    <p>Register and manage students.</p>
+                </div>
+
+                <button onclick="loadStudents()" class="action-btn">
+                    Refresh Students
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h3>Add Student</h3>
+
+                <form id="studentForm" class="form-grid">
+
+                    <div class="form-group">
+                        <label for="studentRollNumber">Roll Number</label>
+                        <input
+                                type="text"
+                                id="studentRollNumber"
+                                placeholder="Enter roll number"
+                                required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentName">Name</label>
+                        <input
+                                type="text"
+                                id="studentName"
+                                placeholder="Enter student name"
+                                required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentEmail">Email</label>
+                        <input
+                                type="email"
+                                id="studentEmail"
+                                placeholder="Enter email">
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="action-btn">
+                            Save Student
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>Student List</h3>
+                        <p>Registered students</p>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Roll Number</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="studentsTable">
+
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                Click "Refresh Students"
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SUBJECTS ================= -->
+
+        <section id="subjects" class="page-section hidden">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Subjects</h2>
+                    <p>Manage subjects and attendance thresholds.</p>
+                </div>
+
+                <button onclick="loadSubjects()" class="action-btn">
+                    Refresh Subjects
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h3>Add Subject</h3>
+
+                <form id="subjectForm" class="form-grid">
+
+                    <div class="form-group">
+                        <label for="subjectCode">Subject Code</label>
+                        <input
+                                type="text"
+                                id="subjectCode"
+                                placeholder="Example: CS101"
+                                required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name</label>
+                        <input
+                                type="text"
+                                id="subjectName"
+                                placeholder="Example: Java Programming"
+                                required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minimumAttendance">
+                            Minimum Attendance %
+                        </label>
+
+                        <input
+                                type="number"
+                                id="minimumAttendance"
+                                value="75"
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                required>
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="action-btn">
+                            Save Subject
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Subject List</h3>
+                        <p>Registered subjects</p>
+                    </div>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Code</th>
+                            <th>Subject</th>
+                            <th>Minimum Attendance</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="subjectsTable">
+
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                Click "Refresh Subjects"
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SESSIONS ================= -->
+
+        <section id="sessions" class="page-section hidden">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Class Sessions</h2>
+                    <p>Create and manage subject sessions.</p>
+                </div>
+
+                <button onclick="loadSessions()" class="action-btn">
+                    Refresh Sessions
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h3>Create Session</h3>
+
+                <form id="sessionForm" class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="sessionSubjectCode">
+                            Subject Code
+                        </label>
+
+                        <input
+                                type="text"
+                                id="sessionSubjectCode"
+                                placeholder="Enter subject code"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sessionDate">Session Date</label>
+                        <input
+                                type="date"
+                                id="sessionDate"
+                                required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sessionTopic">Topic</label>
+                        <input
+                                type="text"
+                                id="sessionTopic"
+                                placeholder="Enter class topic">
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="action-btn">
+                            Create Session
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Session List</h3>
+                        <p>Recorded class sessions</p>
+                    </div>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Topic</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="sessionsTable">
+
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                Click "Refresh Sessions"
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ATTENDANCE ================= -->
+
+        <section id="attendance" class="page-section hidden">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Attendance</h2>
+                    <p>Mark and correct student attendance.</p>
+                </div>
+
+                <button onclick="loadAttendance()" class="action-btn">
+                    Refresh Attendance
+                </button>
+
+            </div>
+
+
+            <div class="two-column">
+
+                <!-- MARK ATTENDANCE -->
+
+                <div class="panel">
+
+                    <h3>Mark Attendance</h3>
+
+                    <form id="attendanceForm">
+
+                        <div class="form-group">
+
+                            <label for="attendanceRollNumber">
+                                Roll Number
+                            </label>
+
+                            <input
+                                    type="text"
+                                    id="attendanceRollNumber"
+                                    placeholder="Enter roll number"
+                                    required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="attendanceSessionId">
+                                Session ID
+                            </label>
+
+                            <input
+                                    type="number"
+                                    id="attendanceSessionId"
+                                    placeholder="Enter session ID"
+                                    required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="attendanceStatus">
+                                Attendance
+                            </label>
+
+                            <select id="attendanceStatus" required>
+
+                                <option value="true">
+                                    Present
+                                </option>
+
+                                <option value="false">
+                                    Absent
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button type="submit" class="action-btn">
+                            Mark Attendance
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- CORRECT ATTENDANCE -->
+
+                <div class="panel">
+
+                    <h3>Correct Attendance</h3>
+
+                    <p class="form-help">
+                        Use this option to correct attendance
+                        for an existing record.
+                    </p>
+
+                    <form id="correctionForm">
+
+                        <div class="form-group">
+
+                            <label for="correctionAttendanceId">
+                                Attendance Record ID
+                            </label>
+
+                            <input
+                                    type="number"
+                                    id="correctionAttendanceId"
+                                    placeholder="Enter record ID"
+                                    required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="correctionStatus">
+                                Correct Status
+                            </label>
+
+                            <select id="correctionStatus" required>
+
+                                <option value="true">
+                                    Present
+                                </option>
+
+                                <option value="false">
+                                    Absent
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button type="submit" class="action-btn">
+                            Correct Attendance
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Attendance Records</h3>
+                        <p>All recorded attendance</p>
+                    </div>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Session</th>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="attendanceTable">
+
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                Click "Refresh Attendance"
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= REPORTS ================= -->
+
+        <section id="reports" class="page-section hidden">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Attendance Reports</h2>
+                    <p>Calculate percentages and identify shortage.</p>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h3>Student Attendance</h3>
+
+                <form id="reportForm" class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="reportStudentId">
+                            Student ID
+                        </label>
+
+                        <input
+                                type="number"
+                                id="reportStudentId"
+                                placeholder="Enter student ID"
+                                required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="reportSubjectId">
+                            Subject ID
+                        </label>
+
+                        <input
+                                type="number"
+                                id="reportSubjectId"
+                                placeholder="Enter subject ID"
+                                required>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="action-btn">
+                            Check Attendance
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="report-grid">
+
+                <div class="panel report-card">
+
+                    <h3>Attendance Percentage</h3>
+
+                    <div class="big-result" id="attendancePercentage">
+                        0%
+                    </div>
+
+                </div>
+
+
+                <div class="panel report-card">
+
+                    <h3>Attendance Status</h3>
+
+                    <div class="big-result" id="attendanceShortage">
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h3>Subject Attendance Report</h3>
+
+                <form id="subjectReportForm" class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="subjectReportId">
+                            Subject ID
+                        </label>
+
+                        <input
+                                type="number"
+                                id="subjectReportId"
+                                placeholder="Enter subject ID"
+                                required>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="action-btn">
+                            Generate Report
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Student</th>
+                            <th>Subject</th>
+                            <th>Total Sessions</th>
+                            <th>Present</th>
+                            <th>Attendance %</th>
+                            <th>Shortage</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="reportTable">
+
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                Generate a subject report
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="/script.js"></script>
+
+</body>
+</html>

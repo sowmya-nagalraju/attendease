@@ -1,0 +1,205 @@
+### Get all students
+GET http://localhost:8080/api/students
+
+###
+
+### Create a new student
+POST http://localhost:8080/api/students
+Content-Type: application/json
+
+{
+  "rollNumber": "25AD208",
+  "name": "Kavya",
+  "email": "kavya@gmail.com"
+}
+
+###
+
+### Get student by roll number
+GET http://localhost:8080/api/students/roll/25AD208
+
+###
+
+### Get all subjects
+GET http://localhost:8080/api/subjects
+
+###
+
+### Create a new subject
+POST http://localhost:8080/api/subjects
+Content-Type: application/json
+
+{
+  "subjectCode": "CS301",
+  "subjectName": "Database Management Systems",
+  "minimumAttendancePercentage": 75
+}
+
+###
+
+### Create a class session
+POST http://localhost:8080/api/sessions?subjectCode=CS301&sessionDate=2026-09-28&topic=Database%20Management%20Systems%20Introduction
+
+###
+
+### Get all sessions
+GET http://localhost:8080/api/sessions
+###
+
+### Mark attendance
+POST http://localhost:8080/api/attendance
+Content-Type: application/json
+
+{
+  "rollNumber": "25AD208",
+  "sessionId": 3,
+  "present": true
+}
+### Mark attendance again
+POST http://localhost:8080/api/attendance
+Content-Type: application/json
+
+{
+  "rollNumber": "25AD208",
+  "sessionId": 3,
+  "present": true
+}
+###
+
+### Get all attendance records
+GET http://localhost:8080/api/attendance
+###
+
+### Correct attendance
+PUT http://localhost:8080/api/attendance/2?present=false
+###
+
+### Get attendance for one student
+GET http://localhost:8080/api/attendance/student/5
+###
+
+### Get attendance percentage
+GET http://localhost:8080/api/reports/attendance?studentId=5&subjectId=3
+###
+
+### Check attendance shortage
+GET http://localhost:8080/api/reports/shortage/check?studentId=5&subjectId=3
+###
+
+### Get subject attendance report
+GET http://localhost:8080/api/reports/subject/3
+###
+
+### Get students with attendance shortage
+GET http://localhost:8080/api/reports/shortage/3
+###
+
+### Edge case - student does not exist
+GET http://localhost:8080/api/attendance/student/9999
+###
+
+### Edge case - session does not exist
+POST http://localhost:8080/api/attendance
+Content-Type: application/json
+
+{
+  "rollNumber": "25AD208",
+  "sessionId": 9999,
+  "present": true
+}
+###
+
+### Get student by ID
+GET http://localhost:8080/api/students/5
+###
+
+### Update student
+PUT http://localhost:8080/api/students/5
+Content-Type: application/json
+
+{
+  "rollNumber": "25AD208",
+  "name": "Kavya Updated",
+  "email": "kavya.updated@gmail.com"
+}
+###
+
+### Get subject by ID
+GET http://localhost:8080/api/subjects/3
+###
+
+### Get subject by subject code
+GET http://localhost:8080/api/subjects/code/CS301
+###
+
+### Update subject
+PUT http://localhost:8080/api/subjects/3
+Content-Type: application/json
+
+{
+  "subjectCode": "CS301",
+  "subjectName": "Advanced Database Management",
+  "minimumAttendancePercentage": 80
+}
+###
+
+### Get session by ID
+GET http://localhost:8080/api/sessions/3
+###
+
+### Get sessions by subject
+GET http://localhost:8080/api/sessions/subject/3
+###
+
+### Update session
+PUT http://localhost:8080/api/sessions/3?subjectId=3&sessionDate=2026-09-28&topic=Updated%20Database%20Class
+###
+
+### Get attendance by ID
+GET http://localhost:8080/api/attendance/2
+###
+
+### Get attendance by session
+GET http://localhost:8080/api/attendance/session/3
+###
+
+### TEST - Create temporary student
+POST http://localhost:8080/api/students
+Content-Type: application/json
+
+{
+  "rollNumber": "TEST999",
+  "name": "Temporary Student",
+  "email": "test999@example.com"
+}
+###
+
+### TEST - Delete temporary student
+DELETE http://localhost:8080/api/students/7
+###
+
+### TEST - Verify deleted student
+GET http://localhost:8080/api/students/7
+###
+
+### TEST - Create temporary subject
+POST http://localhost:8080/api/subjects
+Content-Type: application/json
+
+{
+  "subjectCode": "TESTSUB999",
+  "subjectName": "Temporary Subject",
+  "minimumAttendancePercentage": 75
+}
+###
+
+### TEST - Delete temporary subject
+DELETE http://localhost:8080/api/subjects/5
+###
+
+### TEST - Delete temporary subject
+DELETE http://localhost:8080/api/subjects/5
+###
+
+### TEST - Verify deleted subject
+GET http://localhost:8080/api/subjects/5
